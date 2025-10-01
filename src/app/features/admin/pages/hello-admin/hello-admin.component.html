@@ -1,0 +1,107 @@
+<div class="container">
+  <div class="header">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div class="brand-name">Trustify Admin</div>
+    </div>
+    <div class="action-buttons">
+      <button class="button secondary-button" (click)="goToDashboard()">Dashboard</button>
+      <button class="button primary-button" (click)="logout()">Logout</button>
+    </div>
+  </div>
+  
+  <div class="content" *ngIf="!isLoading">
+    <div class="welcome-message">
+      <h1 class="welcome-title">Hello, {{ username }}! <span class="role-badge">ADMIN</span></h1>
+      <p class="welcome-text">
+        Welcome to the Trustify administration panel. Here you can manage all aspects of the insurance platform.
+      </p>
+    </div>
+    
+    <h2 class="section-title">Administration Tools</h2>
+    
+    <div class="admin-dashboard">
+      <div class="admin-card">
+        <div class="card-header">
+          <div class="card-icon">U</div>
+          <h3 class="card-title">User Management</h3>
+        </div>
+        <p class="card-content">
+          Create, view, update and delete user accounts. Manage user roles and permissions.
+        </p>
+        <div class="card-actions">
+          <button class="button secondary-button">Manage Users</button>
+        </div>
+      </div>
+      
+      <div class="admin-card">
+        <div class="card-header">
+          <div class="card-icon">P</div>
+          <h3 class="card-title">Policy Management</h3>
+        </div>
+        <p class="card-content">
+          Create and modify insurance policy templates. Set pricing and coverage options.
+        </p>
+        <div class="card-actions">
+          <button class="button secondary-button">Manage Policies</button>
+        </div>
+      </div>
+      
+      <div class="admin-card">
+        <div class="card-header">
+          <div class="card-icon">C</div>
+          <h3 class="card-title">Claims Processing</h3>
+        </div>
+        <p class="card-content">
+          Review and process insurance claims. Approve or reject claims and manage payouts.
+        </p>
+        <div class="card-actions">
+          <button class="button secondary-button">Process Claims</button>
+        </div>
+      </div>
+      
+      <div class="admin-card">
+        <div class="card-header">
+          <div class="card-icon">R</div>
+          <h3 class="card-title">Reports & Analytics</h3>
+        </div>
+        <p class="card-content">
+          View detailed reports on policies, claims, and user activity. Analyze business performance.
+        </p>
+        <div class="card-actions">
+          <button class="button secondary-button">View Reports</button>
+        </div>
+      </div>
+      
+      <div class="admin-card">
+        <div class="card-header">
+          <div class="card-icon">S</div>
+          <h3 class="card-title">System Configuration</h3>
+        </div>
+        <p class="card-content">
+          Configure system settings, email notifications, and integration options.
+        </p>
+        <div class="card-actions">
+          <button class="button secondary-button">System Settings</button>
+        </div>
+      </div>
+      
+      <div class="admin-card">
+        <div class="card-header">
+          <div class="card-icon">A</div>
+          <h3 class="card-title">Audit Logs</h3>
+        </div>
+        <p class="card-content">
+          View detailed logs of all system activities and user actions for security compliance.
+        </p>
+        <div class="card-actions">
+          <button class="button secondary-button">View Audit Logs</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="isLoading" class="content">
+    Loading admin dashboard...
+  </div>
+</div>

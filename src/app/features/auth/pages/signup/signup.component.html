@@ -1,0 +1,25 @@
+<div class="signup-container">
+  <div class="signup-content">
+    <div class="logo">T</div>
+    <h1 class="signup-title">Create an Account</h1>
+    <p class="signup-subtitle">Join Trustify Insurance today</p>
+
+    <p class="signup-description">
+      Sign up to get access to our insurance services. Creating an account is quick and easy.
+    </p>
+
+    <button
+      class="signup-button"
+      (click)="onSignup()"
+      [disabled]="isLoading"
+    >
+      <span *ngIf="isLoading" class="button-spinner"></span>
+      <span>Register with Keycloak</span>
+    </button>
+
+    <div class="login-prompt">
+      Already have an account?
+      <a (click)="goToLogin()" class="login-link">Sign in</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="header">
+    <div class="brand">
+      <div class="logo">T</div>
+      <div class="brand-name">Trustify</div>
+    </div>
+    <div class="action-buttons">
+      <button class="button secondary-button" (click)="goToDashboard()">Dashboard</button>
+      <button class="button primary-button" (click)="logout()">Logout</button>
+    </div>
+  </div>
+  
+  <div class="content" *ngIf="!isLoading">
+    <div class="welcome-message">
+      <h1 class="welcome-title">Hello, {{ username }}! <span class="role-badge">USER</span></h1>
+      <p class="welcome-text">
+        Welcome to your Trustify user account. Here you can manage your insurance policies and claims.
+      </p>
+    </div>
+    
+    <div class="info-section">
+      <h2 class="section-title">User Features</h2>
+      
+      <div class="info-card">
+        <h3 class="card-title">Policy Management</h3>
+        <p class="card-text">
+          View and manage your active insurance policies. You can also apply for new policies or modify existing ones.
+        </p>
+      </div>
+      
+      <div class="info-card">
+        <h3 class="card-title">Claims Processing</h3>
+        <p class="card-text">
+          Submit new claims and track the status of your existing claims. Our team will process your claims as quickly as possible.
+        </p>
+      </div>
+      
+      <div class="info-card">
+        <h3 class="card-title">Account Settings</h3>
+        <p class="card-text">
+          Update your personal information, change your password, and manage your notification preferences.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="isLoading" class="content">
+    Loading user information...
+  </div>
+</div>

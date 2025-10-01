@@ -1,0 +1,101 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2 class="register-title">Create Account</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-input"
+          [class.error]="getFieldError('username')"
+          placeholder="Enter your username">
+        <div class="error-message" *ngIf="getFieldError('username')">
+          {{ getFieldError('username') }}
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-input"
+          [class.error]="getFieldError('email')"
+          placeholder="Enter your email">
+        <div class="error-message" *ngIf="getFieldError('email')">
+          {{ getFieldError('email') }}
+        </div>
+      </div>
+
+      <!-- First Name -->
+      <div class="form-group">
+        <label for="firstName" class="form-label">First Name</label>
+        <input
+          type="text"
+          id="firstName"
+          formControlName="firstName"
+          class="form-input"
+          [class.error]="getFieldError('firstName')"
+          placeholder="Enter your first name">
+        <div class="error-message" *ngIf="getFieldError('firstName')">
+          {{ getFieldError('firstName') }}
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="form-group">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input
+          type="text"
+          id="lastName"
+          formControlName="lastName"
+          class="form-input"
+          [class.error]="getFieldError('lastName')"
+          placeholder="Enter your last name">
+        <div class="error-message" *ngIf="getFieldError('lastName')">
+          {{ getFieldError('lastName') }}
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-input"
+          [class.error]="getFieldError('password')"
+          placeholder="Enter your password">
+        <div class="error-message" *ngIf="getFieldError('password')">
+          {{ getFieldError('password') }}
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="register-button"
+        [disabled]="isLoading">
+        <span *ngIf="isLoading">Creating Account...</span>
+        <span *ngIf="!isLoading">Create Account</span>
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      <p>Already have an account? <a routerLink="/auth/login">Sign in</a></p>
+    </div>
+  </div>
+</div>
