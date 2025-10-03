@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { POLICY_ROUTES } from './features/policies/policies.routes';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,12 @@ export const routes: Routes = [
     loadComponent: () => 
       import('./features/dashboard/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'policies',
+    children: POLICY_ROUTES,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { role: 'user' }
   },
   {
     path: 'hello-user',

@@ -1,0 +1,255 @@
+<div class="profile-completion-container">
+  <div class="profile-header">
+    <h1>Complete Your Profile</h1>
+    <p>Please provide your information to complete your profile setup.</p>
+    
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+  </div>
+  
+  <!-- Always visible debugging info -->
+  <div style="background-color: #f5f5f5; border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
+    <p>Component Status:</p>
+    <ul>
+      <li>isLoading: {{ isLoading }}</li>
+      <li>isSubmitting: {{ isSubmitting }}</li>
+      <li>Form valid: {{ profileForm?.valid }}</li>
+      <li>Form touched: {{ profileForm?.touched }}</li>
+      <li>First name value: {{ profileForm?.get('firstName')?.value }}</li>
+      <li>Last name value: {{ profileForm?.get('lastName')?.value }}</li>
+      <li>First name errors: {{ profileForm?.get('firstName')?.errors | json }}</li>
+    </ul>
+    
+    <button type="button" (click)="console.log(profileForm.value)">Log Form Values</button>
+  </div>
+
+  <div class="profile-form-container">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form" #profileFormElement>
+
+      <!-- Personal Information -->
+      <div class="form-section">
+        <h3>Personal Information</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              [class.error]="getFieldError('firstName')"
+              placeholder="Enter your first name">
+            <div class="error-message" *ngIf="getFieldError('firstName')">
+              {{ getFieldError('firstName') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              [class.error]="getFieldError('lastName')"
+              placeholder="Enter your last name">
+            <div class="error-message" *ngIf="getFieldError('lastName')">
+              {{ getFieldError('lastName') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dateOfBirth">Date of Birth *</label>
+            <input
+              type="date"
+              id="dateOfBirth"
+              formControlName="dateOfBirth"
+              [class.error]="getFieldError('dateOfBirth')"
+              [max]="getMaxDate()">
+            <div class="error-message" *ngIf="getFieldError('dateOfBirth')">
+              {{ getFieldError('dateOfBirth') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              formControlName="phoneNumber"
+              [class.error]="getFieldError('phoneNumber')"
+              placeholder="Enter your phone number">
+            <div class="error-message" *ngIf="getFieldError('phoneNumber')">
+              {{ getFieldError('phoneNumber') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address Information -->
+      <div class="form-section">
+        <h3>Address Information</h3>
+
+        <div class="form-group">
+          <label for="address">Street Address *</label>
+          <input
+            type="text"
+            id="address"
+            formControlName="address"
+            [class.error]="getFieldError('address')"
+            placeholder="Enter your street address">
+          <div class="error-message" *ngIf="getFieldError('address')">
+            {{ getFieldError('address') }}
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City *</label>
+            <input
+              type="text"
+              id="city"
+              formControlName="city"
+              [class.error]="getFieldError('city')"
+              placeholder="Enter your city">
+            <div class="error-message" *ngIf="getFieldError('city')">
+              {{ getFieldError('city') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="state">State *</label>
+            <input
+              type="text"
+              id="state"
+              formControlName="state"
+              [class.error]="getFieldError('state')"
+              placeholder="Enter your state">
+            <div class="error-message" *ngIf="getFieldError('state')">
+              {{ getFieldError('state') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="zipCode">Zip Code *</label>
+            <input
+              type="text"
+              id="zipCode"
+              formControlName="zipCode"
+              [class.error]="getFieldError('zipCode')"
+              placeholder="Enter your zip code">
+            <div class="error-message" *ngIf="getFieldError('zipCode')">
+              {{ getFieldError('zipCode') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="country">Country *</label>
+            <input
+              type="text"
+              id="country"
+              formControlName="country"
+              [class.error]="getFieldError('country')"
+              placeholder="Enter your country">
+            <div class="error-message" *ngIf="getFieldError('country')">
+              {{ getFieldError('country') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Employment Information -->
+      <div class="form-section">
+        <h3>Employment Information</h3>
+
+        <div class="form-group">
+          <label for="employmentStatus">Employment Status *</label>
+          <select
+            id="employmentStatus"
+            formControlName="employmentStatus"
+            [class.error]="getFieldError('employmentStatus')">
+            <option value="">Select employment status</option>
+            <option *ngFor="let status of employmentStatuses" [value]="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+          <div class="error-message" *ngIf="getFieldError('employmentStatus')">
+            {{ getFieldError('employmentStatus') }}
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="occupation">Occupation</label>
+            <input
+              type="text"
+              id="occupation"
+              formControlName="occupation"
+              placeholder="Enter your occupation">
+          </div>
+
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input
+              type="text"
+              id="company"
+              formControlName="company"
+              placeholder="Enter your company name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="annualIncome">Annual Income ($)</label>
+          <input
+            type="number"
+            id="annualIncome"
+            formControlName="annualIncome"
+            [class.error]="getFieldError('annualIncome')"
+            placeholder="Enter your annual income"
+            min="0">
+          <div class="error-message" *ngIf="getFieldError('annualIncome')">
+            {{ getFieldError('annualIncome') }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="logout()">
+          Logout
+        </button>
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Saving Profile...' : 'Complete Profile' }}
+        </button>
+        
+        <!-- Alternative submit button for testing -->
+        <button
+          type="button"
+          class="btn-primary"
+          style="margin-top: 10px;"
+          (click)="onSubmit()">
+          Submit (Alternative)
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">
+    <p>Loading your profile information...</p>
+  </div>
+  
+  <!-- Debug info - remove this after debugging -->
+  <div class="debug-info" style="margin-top: 20px; padding: 10px; background-color: #f0f0f0; border: 1px solid #ccc;">
+    <p>Debug: isLoading = {{ isLoading }}</p>
+  </div>
+</div>

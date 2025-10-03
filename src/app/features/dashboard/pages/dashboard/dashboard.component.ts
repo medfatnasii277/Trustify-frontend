@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KeycloakService } from '../../../../core/services/keycloak.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, RouterModule]
 })
 export class DashboardComponent implements OnInit {
   username = '';
@@ -62,6 +62,10 @@ export class DashboardComponent implements OnInit {
 
   goToUserPage(): void {
     this.router.navigate(['/hello-user']);
+  }
+  
+  goToPolicyPage(): void {
+    this.router.navigate(['/policies']);
   }
 
   logout(): void {
