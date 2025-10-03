@@ -275,8 +275,9 @@ export class KeycloakService {
       console.log('User has admin role, navigating to /hello-admin');
       this.router.navigate(['/hello-admin']);
     } else if (hasUserRole) {
-      console.log('User has user role, navigating to /hello-user');
-      this.router.navigate(['/hello-user']);
+      console.log('User has user role, navigating to /dashboard');
+      // Dashboard route will check profile completion via guard
+      this.router.navigate(['/dashboard']);
     } else {
       console.log('User has no specific role, navigating to /dashboard');
       this.router.navigate(['/dashboard']);

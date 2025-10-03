@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { profileCompletionGuard } from './core/guards/profile-completion.guard';
 import { POLICY_ROUTES } from './features/policies/policies.routes';
 
 export const routes: Routes = [
@@ -25,15 +26,21 @@ export const routes: Routes = [
       import('./shared/access-denied/access-denied.component').then(m => m.AccessDeniedComponent)
   },
   {
+    path: 'user/complete-profile',
+    loadComponent: () => 
+      import('./features/user/pages/profile-completion/profile-completion.component').then(m => m.ProfileCompletionComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'dashboard',
     loadComponent: () => 
       import('./features/dashboard/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, profileCompletionGuard]
   },
   {
     path: 'policies',
     children: POLICY_ROUTES,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [AuthGuard, profileCompletionGuard, RoleGuard],
     data: { role: 'user' }
   },
   {
