@@ -50,11 +50,22 @@ import { PaymentFrequency } from '../../models';
               </div>
             </div>
             <div class="form-group">
-              <label>Deductible Amount*</label>
-              <input type="number" formControlName="deductibleAmount" placeholder="1000" class="form-control">
-              <div *ngIf="houseInsuranceForm.get('deductibleAmount')?.invalid && houseInsuranceForm.get('deductibleAmount')?.touched" class="error">
-                Deductible amount is required
+              <label>Payment Frequency*</label>
+              <select formControlName="paymentFrequency" class="form-control">
+                <option value="">Select frequency</option>
+                <option value="MONTHLY">Monthly</option>
+                <option value="QUARTERLY">Quarterly</option>
+                <option value="ANNUALLY">Annually</option>
+              </select>
+              <div *ngIf="houseInsuranceForm.get('paymentFrequency')?.invalid && houseInsuranceForm.get('paymentFrequency')?.touched" class="error">
+                Payment frequency is required
               </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" formControlName="description" placeholder="Optional policy description" class="form-control">
             </div>
           </div>
         </div>
@@ -93,10 +104,32 @@ import { PaymentFrequency } from '../../models';
               </div>
             </div>
             <div class="form-group">
-              <label>Square Footage*</label>
-              <input type="number" formControlName="squareFootage" placeholder="2000" class="form-control">
-              <div *ngIf="houseInsuranceForm.get('squareFootage')?.invalid && houseInsuranceForm.get('squareFootage')?.touched" class="error">
-                Square footage is required
+              <label>Property Value*</label>
+              <input type="number" formControlName="propertyValue" placeholder="400000" class="form-control">
+              <div *ngIf="houseInsuranceForm.get('propertyValue')?.invalid && houseInsuranceForm.get('propertyValue')?.touched" class="error">
+                Property value is required
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Contents Value*</label>
+              <input type="number" formControlName="contentsValue" placeholder="50000" class="form-control">
+              <div *ngIf="houseInsuranceForm.get('contentsValue')?.invalid && houseInsuranceForm.get('contentsValue')?.touched" class="error">
+                Contents value is required
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Coverage Type*</label>
+              <select formControlName="coverageType" class="form-control">
+                <option value="">Select coverage type</option>
+                <option value="BASIC">Basic</option>
+                <option value="STANDARD">Standard</option>
+                <option value="PREMIUM">Premium</option>
+                <option value="CUSTOM">Custom</option>
+              </select>
+              <div *ngIf="houseInsuranceForm.get('coverageType')?.invalid && houseInsuranceForm.get('coverageType')?.touched" class="error">
+                Coverage type is required
               </div>
             </div>
           </div>
@@ -116,11 +149,7 @@ import { PaymentFrequency } from '../../models';
               Earthquake Coverage
             </label>
             <label class="checkbox">
-              <input type="checkbox" formControlName="includesPersonalProperty">
-              Personal Property Coverage
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" formControlName="includesLiability">
+              <input type="checkbox" formControlName="includesLiabilityCoverage">
               Liability Coverage
             </label>
           </div>
@@ -172,15 +201,17 @@ export class HouseInsuranceFormComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       coverageAmount: ['', [Validators.required, Validators.min(1)]],
-      deductibleAmount: ['', [Validators.required, Validators.min(0)]],
+      paymentFrequency: ['', Validators.required],
+      description: [''],
       propertyAddress: ['', Validators.required],
       propertyType: ['', Validators.required],
       yearBuilt: ['', [Validators.required, Validators.min(1800)]],
-      squareFootage: ['', [Validators.required, Validators.min(1)]],
+      propertyValue: ['', [Validators.required, Validators.min(1)]],
+      contentsValue: ['', [Validators.required, Validators.min(1)]],
+      coverageType: ['', Validators.required],
       includesFloodCoverage: [false],
       includesEarthquakeCoverage: [false],
-      includesPersonalProperty: [false],
-      includesLiability: [false]
+      includesLiabilityCoverage: [true]
     });
   }
 
@@ -195,12 +226,24 @@ export class HouseInsuranceFormComponent implements OnInit {
 
     const formValue = this.houseInsuranceForm.value;
 
-    this.policyService.createHousePolicy({
-      ...formValue,
-      userProfileId: 1, // This would normally come from the logged-in user's profile
-      startDate: new Date(formValue.startDate),
-      endDate: new Date(formValue.endDate)
-    }).subscribe({
+    const policyData = {
+      startDate: formValue.startDate,
+      endDate: formValue.endDate,
+      coverageAmount: formValue.coverageAmount,
+      paymentFrequency: formValue.paymentFrequency,
+      description: formValue.description || '',
+      propertyAddress: formValue.propertyAddress,
+      propertyType: formValue.propertyType,
+      yearBuilt: formValue.yearBuilt,
+      propertyValue: formValue.propertyValue,
+      contentsValue: formValue.contentsValue,
+      coverageType: formValue.coverageType,
+      includesFloodCoverage: formValue.includesFloodCoverage,
+      includesEarthquakeCoverage: formValue.includesEarthquakeCoverage,
+      includesLiabilityCoverage: formValue.includesLiabilityCoverage
+    };
+
+    this.policyService.createHousePolicy(policyData).subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
         this.router.navigate(['/dashboard'], {

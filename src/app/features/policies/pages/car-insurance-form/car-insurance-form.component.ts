@@ -50,11 +50,22 @@ import { PaymentFrequency } from '../../models';
               </div>
             </div>
             <div class="form-group">
-              <label>Deductible Amount*</label>
-              <input type="number" formControlName="deductibleAmount" placeholder="1000" class="form-control">
-              <div *ngIf="carInsuranceForm.get('deductibleAmount')?.invalid && carInsuranceForm.get('deductibleAmount')?.touched" class="error">
-                Deductible amount is required
+              <label>Payment Frequency*</label>
+              <select formControlName="paymentFrequency" class="form-control">
+                <option value="">Select frequency</option>
+                <option value="MONTHLY">Monthly</option>
+                <option value="QUARTERLY">Quarterly</option>
+                <option value="ANNUALLY">Annually</option>
+              </select>
+              <div *ngIf="carInsuranceForm.get('paymentFrequency')?.invalid && carInsuranceForm.get('paymentFrequency')?.touched" class="error">
+                Payment frequency is required
               </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" formControlName="description" placeholder="Optional policy description" class="form-control">
             </div>
           </div>
         </div>
@@ -179,7 +190,8 @@ export class CarInsuranceFormComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       coverageAmount: ['', [Validators.required, Validators.min(1)]],
-      deductibleAmount: ['', [Validators.required, Validators.min(0)]],
+      paymentFrequency: ['', Validators.required],
+      description: [''],
       vehicleYear: ['', [Validators.required, Validators.min(1900)]],
       vehicleMake: ['', Validators.required],
       vehicleModel: ['', Validators.required],
@@ -206,12 +218,23 @@ export class CarInsuranceFormComponent implements OnInit {
 
     const formValue = this.carInsuranceForm.value;
 
-    this.policyService.createCarPolicy({
-      ...formValue,
-      userProfileId: 1, // This would normally come from the logged-in user's profile
-      startDate: new Date(formValue.startDate),
-      endDate: new Date(formValue.endDate)
-    }).subscribe({
+    const policyData = {
+      startDate: formValue.startDate,
+      endDate: formValue.endDate,
+      coverageAmount: formValue.coverageAmount,
+      paymentFrequency: formValue.paymentFrequency,
+      description: formValue.description || '',
+      vehicleMake: formValue.vehicleMake,
+      vehicleModel: formValue.vehicleModel,
+      vehicleYear: formValue.vehicleYear,
+      vehicleVIN: formValue.vehicleVIN,
+      licensePlate: formValue.licensePlate,
+      coverageType: formValue.coverageType,
+      includesRoadSideAssistance: formValue.includesRoadSideAssistance,
+      includesRentalCarCoverage: formValue.includesRentalCarCoverage
+    };
+
+    this.policyService.createCarPolicy(policyData).subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
         this.router.navigate(['/dashboard'], {
