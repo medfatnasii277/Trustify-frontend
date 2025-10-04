@@ -24,22 +24,37 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadUserProfile();
     this.checkRoles();
+    
+    // Set a timeout to stop loading after 2 seconds even if profile doesn't load
+    setTimeout(() => {
+      if (this.isLoading) {
+        console.warn('Dashboard loading timeout - setting default username');
+        this.username = 'User';
+        this.isLoading = false;
+      }
+    }, 2000);
   }
 
   loadUserProfile(): void {
-    this.keycloakService.getUserProfile().subscribe(
-      profile => {
+    this.keycloakService.getUserProfile().subscribe({
+      next: (profile) => {
+        console.log('User profile received:', profile);
         if (profile) {
           this.username = profile.firstName || profile.username || 'User';
           this.isLoading = false;
+        } else {
+          // Profile is null, try to get username from token
+          console.log('Profile is null, using fallback');
+          this.username = 'User';
+          this.isLoading = false;
         }
       },
-      error => {
+      error: (error) => {
         console.error('Could not load user profile', error);
         this.isLoading = false;
         this.username = 'User';
       }
-    );
+    });
   }
 
   checkRoles(): void {
@@ -66,6 +81,10 @@ export class DashboardComponent implements OnInit {
   
   goToPolicyPage(): void {
     this.router.navigate(['/policies']);
+  }
+
+  goToMyPolicies(): void {
+    this.router.navigate(['/policies/list']);
   }
 
   logout(): void {

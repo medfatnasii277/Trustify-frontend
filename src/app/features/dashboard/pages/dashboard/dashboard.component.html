@@ -46,6 +46,15 @@
         </p>
         <button class="button primary-button">Explore Insurance Policies</button>
       </div>
+
+      <div class="role-card" *ngIf="isUser" (click)="goToMyPolicies()">
+        <div class="card-icon user-icon">📋</div>
+        <h3 class="card-title">My Policies</h3>
+        <p class="card-description">
+          View and manage all your existing insurance policies in one place.
+        </p>
+        <button class="button primary-button">View My Policies</button>
+      </div>
       
       <div class="role-card" *ngIf="!isAdmin && !isUser">
         <div class="card-icon">!</div>

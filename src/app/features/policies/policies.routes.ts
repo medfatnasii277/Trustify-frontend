@@ -7,6 +7,15 @@ export const POLICY_ROUTES: Routes = [
     component: PolicySelectionComponent
   },
   {
+    path: 'select',
+    component: PolicySelectionComponent
+  },
+  {
+    path: 'list',
+    loadComponent: () => import('./pages/policy-list/policy-list.component')
+      .then(m => m.PolicyListComponent)
+  },
+  {
     path: 'life/new',
     loadComponent: () => import('./pages/life-insurance-form/life-insurance-form.component')
       .then(m => m.LifeInsuranceFormComponent)
