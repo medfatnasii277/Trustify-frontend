@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { PolicyService } from '../../services/policy.service';
@@ -261,6 +261,7 @@ import { PolicyService } from '../../services/policy.service';
 export class PolicyListComponent implements OnInit {
   private router = inject(Router);
   private policyService = inject(PolicyService);
+  private cdr = inject(ChangeDetectorRef);
 
   lifePolicies: any[] = [];
   carPolicies: any[] = [];
@@ -274,51 +275,80 @@ export class PolicyListComponent implements OnInit {
   errorMessage = '';
 
   ngOnInit() {
+    console.log('PolicyListComponent initialized');
     this.loadPolicies();
   }
 
   loadPolicies() {
+    console.log('Starting to load policies...');
     this.isLoading = true;
     this.errorMessage = '';
+    let loadedCount = 0;
+    const totalRequests = 3;
+
+    const checkAllLoaded = () => {
+      loadedCount++;
+      console.log(`Loaded ${loadedCount} of ${totalRequests} policy types`);
+      if (loadedCount === totalRequests) {
+        console.log('All policies loaded:', {
+          life: this.lifePolicies.length,
+          car: this.carPolicies.length,
+          house: this.housePolicies.length,
+          total: this.allPolicies.length
+        });
+        this.updateAllPolicies();
+        this.isLoading = false;
+      }
+    };
+
+    // Fallback timeout - if requests take more than 10 seconds, stop loading
+    setTimeout(() => {
+      if (this.isLoading) {
+        console.warn('Loading timeout - forcing completion');
+        this.isLoading = false;
+        this.updateAllPolicies();
+        if (this.allPolicies.length === 0) {
+          this.errorMessage = 'Unable to load policies. Please check your connection and try again.';
+        }
+      }
+    }, 10000);
 
     // Load all policy types
     this.policyService.getMyLifePolicies().subscribe({
       next: (policies) => {
+        console.log('Life policies loaded:', policies);
         this.lifePolicies = policies.map(p => ({ ...p, type: 'LIFE' }));
-        this.updateAllPolicies();
+        checkAllLoaded();
       },
       error: (error) => {
         console.error('Error loading life policies:', error);
+        checkAllLoaded();
       }
     });
 
     this.policyService.getMyCarPolicies().subscribe({
       next: (policies) => {
+        console.log('Car policies loaded:', policies);
         this.carPolicies = policies.map(p => ({ ...p, type: 'CAR' }));
-        this.updateAllPolicies();
+        checkAllLoaded();
       },
       error: (error) => {
         console.error('Error loading car policies:', error);
+        checkAllLoaded();
       }
     });
 
     this.policyService.getMyHousePolicies().subscribe({
       next: (policies) => {
+        console.log('House policies loaded:', policies);
         this.housePolicies = policies.map(p => ({ ...p, type: 'HOUSE' }));
-        this.updateAllPolicies();
+        checkAllLoaded();
       },
       error: (error) => {
         console.error('Error loading house policies:', error);
+        checkAllLoaded();
       }
     });
-
-    // Set loading to false after a short delay to allow all requests to complete
-    setTimeout(() => {
-      this.isLoading = false;
-      if (this.allPolicies.length === 0 && !this.errorMessage) {
-        this.errorMessage = '';
-      }
-    }, 1000);
   }
 
   updateAllPolicies() {
@@ -327,7 +357,11 @@ export class PolicyListComponent implements OnInit {
       ...this.carPolicies,
       ...this.housePolicies
     ];
+    console.log('updateAllPolicies called - allPolicies:', this.allPolicies.length);
     this.filterPolicies(this.selectedFilter);
+    console.log('After filterPolicies - filteredPolicies:', this.filteredPolicies.length);
+    // Force Angular to detect changes
+    this.cdr.detectChanges();
   }
 
   filterPolicies(type: 'all' | 'life' | 'car' | 'house') {
@@ -342,6 +376,7 @@ export class PolicyListComponent implements OnInit {
     } else if (type === 'house') {
       this.filteredPolicies = this.housePolicies;
     }
+    console.log(`filterPolicies(${type}) - filteredPolicies:`, this.filteredPolicies.length);
   }
 
   navigateToDashboard() {

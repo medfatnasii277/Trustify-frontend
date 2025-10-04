@@ -1,0 +1,213 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.header p {
+  font-size: 18px;
+  color: #6b7280;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.policies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.policy-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 30px;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.policy-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-color: #3b82f6;
+}
+
+.policy-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.policy-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.life-icon {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.car-icon {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+.house-icon {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.policy-card h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.policy-card p {
+  font-size: 15px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+}
+
+.features-list li {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.features-list li::before {
+  content: "✓";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: #d1fae5;
+  color: #10b981;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-life {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-life:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-car {
+  background: #10b981;
+  color: white;
+}
+
+.btn-car:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-house {
+  background: #f59e0b;
+  color: white;
+}
+
+.btn-house:hover {
+  background: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.back-button {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn-back {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 12px 32px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 28px;
+  }
+
+  .header p {
+    font-size: 16px;
+  }
+
+  .policies-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .policy-card {
+    padding: 24px;
+  }
+}
