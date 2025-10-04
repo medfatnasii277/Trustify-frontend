@@ -87,6 +87,14 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/policies/list']);
   }
 
+  goToMyClaims(): void {
+    this.router.navigate(['/claims/list']);
+  }
+
+  goToSubmitClaim(): void {
+    this.router.navigate(['/claims/submit']);
+  }
+
   logout(): void {
     this.keycloakService.logout()
       .catch(error => console.error('Logout failed', error));

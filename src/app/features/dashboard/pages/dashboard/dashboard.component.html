@@ -55,6 +55,24 @@
         </p>
         <button class="button primary-button">View My Policies</button>
       </div>
+
+      <div class="role-card" *ngIf="isUser" (click)="goToMyClaims()">
+        <div class="card-icon user-icon">📝</div>
+        <h3 class="card-title">My Claims</h3>
+        <p class="card-description">
+          View the status of your submitted insurance claims and track their progress.
+        </p>
+        <button class="button primary-button">View My Claims</button>
+      </div>
+
+      <div class="role-card" *ngIf="isUser" (click)="goToSubmitClaim()">
+        <div class="card-icon user-icon">➕</div>
+        <h3 class="card-title">Submit Claim</h3>
+        <p class="card-description">
+          Submit a new insurance claim for one of your active policies.
+        </p>
+        <button class="button primary-button">Submit New Claim</button>
+      </div>
       
       <div class="role-card" *ngIf="!isAdmin && !isUser">
         <div class="card-icon">!</div>

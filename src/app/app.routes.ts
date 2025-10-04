@@ -3,6 +3,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
 import { profileCompletionGuard } from './core/guards/profile-completion.guard';
 import { POLICY_ROUTES } from './features/policies/policies.routes';
+import { CLAIM_ROUTES } from './features/claims/claims.routes';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,12 @@ export const routes: Routes = [
   {
     path: 'policies',
     children: POLICY_ROUTES,
+    canActivate: [AuthGuard, profileCompletionGuard, RoleGuard],
+    data: { role: 'user' }
+  },
+  {
+    path: 'claims',
+    children: CLAIM_ROUTES,
     canActivate: [AuthGuard, profileCompletionGuard, RoleGuard],
     data: { role: 'user' }
   },
