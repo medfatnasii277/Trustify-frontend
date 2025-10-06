@@ -1,7 +1,11 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8081/api',
-  claimsApiUrl: 'http://localhost:8082/api',
+  // API Gateway URL - all requests go through the gateway
+  apiUrl: 'http://localhost:8083/api',
+  // Gateway will route /api/policies/** to policy-service (8081)
+  // Gateway will route /api/claims/** to claims-service (8082)
+  // Gateway will route /api/admin/** to respective services with ADMIN role check
+  
   keycloak: {
     url: 'http://localhost:8080',
     realm: 'Trustiify',

@@ -9,7 +9,8 @@ import { ClaimRequest, ClaimResponse, ClaimStatus, PolicyType } from '../models/
 })
 export class ClaimService {
   private http = inject(HttpClient);
-  private apiUrl = environment.claimsApiUrl;
+  // Use gateway URL - gateway will route to claims-service
+  private apiUrl = environment.apiUrl;
 
   // User endpoints
   submitClaim(request: ClaimRequest): Observable<ClaimResponse> {

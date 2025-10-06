@@ -6,11 +6,10 @@ import { routes } from './app.routes';
 
 // HTTP interceptor function for adding auth tokens
 const authInterceptorFn: HttpInterceptorFn = (req, next) => {
-  // Only add auth headers for API calls to our backend services
-  const policyApiUrl = 'http://localhost:8081/api';
-  const claimsApiUrl = 'http://localhost:8082/api';
+  // Only add auth headers for API calls to our API Gateway
+  const gatewayApiUrl = 'http://localhost:8083/api';
   
-  if (req.url.startsWith(policyApiUrl) || req.url.startsWith(claimsApiUrl)) {
+  if (req.url.startsWith(gatewayApiUrl)) {
     // Get the token from local storage
     const token = localStorage.getItem('token');
     

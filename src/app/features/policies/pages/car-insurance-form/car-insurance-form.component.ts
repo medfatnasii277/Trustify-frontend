@@ -124,7 +124,7 @@ import { PaymentFrequency } from '../../models';
               <label>Coverage Type*</label>
               <select formControlName="coverageType" class="form-control">
                 <option value="">Select coverage type</option>
-                <option value="LIABILITY">Liability Only</option>
+                <option value="LIABILITY_ONLY">Liability Only</option>
                 <option value="COLLISION">Collision</option>
                 <option value="COMPREHENSIVE">Comprehensive</option>
                 <option value="FULL_COVERAGE">Full Coverage</option>

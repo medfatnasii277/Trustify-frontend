@@ -68,8 +68,9 @@ import { PaymentFrequency } from '../../models';
               <select formControlName="policyType" class="form-control">
                 <option value="">Select policy type</option>
                 <option value="TERM">Term Life</option>
-                <option value="WHOLE">Whole Life</option>
-                <option value="UNIVERSAL">Universal Life</option>
+                <option value="WHOLE_LIFE">Whole Life</option>
+                <option value="UNIVERSAL_LIFE">Universal Life</option>
+                <option value="VARIABLE_LIFE">Variable Life</option>
               </select>
               <div *ngIf="lifeInsuranceForm.get('policyType')?.invalid && lifeInsuranceForm.get('policyType')?.touched" class="error">
                 Policy type is required
