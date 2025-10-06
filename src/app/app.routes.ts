@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { adminGuard } from './core/guards/admin.guard';
 import { profileCompletionGuard } from './core/guards/profile-completion.guard';
 import { POLICY_ROUTES } from './features/policies/policies.routes';
 import { CLAIM_ROUTES } from './features/claims/claims.routes';
@@ -63,6 +64,18 @@ export const routes: Routes = [
       import('./features/admin/pages/hello-admin/hello-admin.component').then(m => m.HelloAdminComponent),
     canActivate: [AuthGuard, RoleGuard],
     data: { role: 'admin' }
+  },
+  {
+    path: 'admin/claims',
+    loadComponent: () => 
+      import('./features/admin/pages/admin-claims/admin-claims.component').then(m => m.AdminClaimsComponent),
+    canActivate: [AuthGuard, adminGuard]
+  },
+  {
+    path: 'admin/policies',
+    loadComponent: () => 
+      import('./features/admin/pages/admin-policies/admin-policies.component').then(m => m.AdminPoliciesComponent),
+    canActivate: [AuthGuard, adminGuard]
   },
   {
     path: '**',

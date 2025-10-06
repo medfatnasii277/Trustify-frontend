@@ -1,0 +1,159 @@
+<div class="container">
+  <div class="header">
+    <button class="back-btn" (click)="back()">← Back to Admin</button>
+    <h1>Claims Management</h1>
+    <p>Review and process insurance claims</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>Status Filter:</label>
+      <select [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilterChange()" class="form-control">
+        <option value="ALL">All Claims</option>
+        <option *ngFor="let status of statuses" [value]="status">{{ status.replace('_', ' ') }}</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Search:</label>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search by claim number, type..." 
+        class="form-control">
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Loading claims...</p>
+  </div>
+
+  <!-- Claims Table -->
+  <div *ngIf="!isLoading" class="claims-table">
+    <div *ngIf="filteredClaims.length === 0" class="no-claims">
+      <p>No claims found</p>
+    </div>
+
+    <table *ngIf="filteredClaims.length > 0">
+      <thead>
+        <tr>
+          <th>Claim Number</th>
+          <th>Type</th>
+          <th>Policy Number</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let claim of filteredClaims">
+          <td class="claim-number">{{ claim.claimNumber }}</td>
+          <td>{{ claim.claimType }}</td>
+          <td>{{ claim.policyNumber }}</td>
+          <td class="amount">${{ claim.claimedAmount.toLocaleString() }}</td>
+          <td>
+            <span [class]="'status-badge ' + getStatusClass(claim.status)">
+              {{ claim.status.replace('_', ' ') }}
+            </span>
+          </td>
+          <td>{{ claim.claimDate | date:'short' }}</td>
+          <td class="actions">
+            <button 
+              *ngIf="claim.status === 'SUBMITTED'" 
+              class="btn btn-sm btn-info"
+              (click)="moveToReview(claim)">
+              Review
+            </button>
+            <button 
+              *ngIf="claim.status === 'UNDER_REVIEW'" 
+              class="btn btn-sm btn-success"
+              (click)="openApprovalModal(claim)">
+              Approve
+            </button>
+            <button 
+              *ngIf="claim.status === 'UNDER_REVIEW' || claim.status === 'SUBMITTED'" 
+              class="btn btn-sm btn-danger"
+              (click)="openRejectionModal(claim)">
+              Reject
+            </button>
+            <button 
+              *ngIf="claim.status === 'APPROVED'" 
+              class="btn btn-sm btn-primary"
+              (click)="settleClaim(claim)">
+              Settle
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Approval Modal -->
+<div class="modal" *ngIf="showApprovalModal">
+  <div class="modal-overlay" (click)="closeApprovalModal()"></div>
+  <div class="modal-content">
+    <h2>Approve Claim</h2>
+    <p>Claim Number: <strong>{{ selectedClaim?.claimNumber }}</strong></p>
+    <p>Claimed Amount: <strong>${{ selectedClaim?.claimedAmount.toLocaleString() }}</strong></p>
+
+    <div class="form-group">
+      <label>Approved Amount*</label>
+      <input type="number" [(ngModel)]="approvedAmount" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label>Admin Notes</label>
+      <textarea [(ngModel)]="adminNotes" class="form-control" rows="3"
+                placeholder="Optional notes about the approval..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="closeApprovalModal()">Cancel</button>
+      <button class="btn btn-success" (click)="approveClaim()" [disabled]="!approvedAmount || approvedAmount <= 0">
+        Approve Claim
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Rejection Modal -->
+<div class="modal" *ngIf="showRejectionModal">
+  <div class="modal-overlay" (click)="closeRejectionModal()"></div>
+  <div class="modal-content">
+    <h2>Reject Claim</h2>
+    <p>Claim Number: <strong>{{ selectedClaim?.claimNumber }}</strong></p>
+
+    <div class="form-group">
+      <label>Rejection Reason* (minimum 10 characters)</label>
+      <textarea [(ngModel)]="rejectionReason" class="form-control" rows="4"
+                placeholder="Provide a detailed reason for rejection..." required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Admin Notes</label>
+      <textarea [(ngModel)]="adminNotes" class="form-control" rows="2"
+                placeholder="Optional internal notes..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="closeRejectionModal()">Cancel</button>
+      <button class="btn btn-danger" (click)="rejectClaim()" [disabled]="!rejectionReason || rejectionReason.length < 10">
+        Reject Claim
+      </button>
+    </div>
+  </div>
+</div>

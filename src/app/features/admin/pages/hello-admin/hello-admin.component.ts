@@ -47,4 +47,12 @@ export class HelloAdminComponent implements OnInit {
   goToDashboard(): void {
     this.router.navigate(['/dashboard']);
   }
+
+  goToPolicies(): void {
+    this.router.navigate(['/admin/policies']);
+  }
+
+  goToClaims(): void {
+    this.router.navigate(['/admin/claims']);
+  }
 }
