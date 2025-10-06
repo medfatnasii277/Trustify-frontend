@@ -21,6 +21,10 @@ export class AdminPoliciesComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
   successMessage = '';
+  
+  // Modal state
+  showDetailsModal = false;
+  selectedPolicy: AnyInsurancePolicy | null = null;
 
   // Filter options
   statusFilter: string = 'ALL';
@@ -101,8 +105,53 @@ export class AdminPoliciesComponent implements OnInit {
   }
 
   viewDetails(policy: AnyInsurancePolicy): void {
-    const type = this.getPolicyType(policy).toLowerCase();
-    this.router.navigate([`/policies/${type}`, policy.id]);
+    this.selectedPolicy = policy;
+    this.showDetailsModal = true;
+  }
+
+  closeDetailsModal(): void {
+    this.showDetailsModal = false;
+    this.selectedPolicy = null;
+  }
+
+  // Check if policy is a car policy
+  isCarPolicy(policy: AnyInsurancePolicy): boolean {
+    return 'vehicleMake' in policy;
+  }
+
+  // Check if policy is a life policy
+  isLifePolicy(policy: AnyInsurancePolicy): boolean {
+    return 'policyType' in policy && !('vehicleMake' in policy) && !('propertyAddress' in policy);
+  }
+
+  // Check if policy is a house policy
+  isHousePolicy(policy: AnyInsurancePolicy): boolean {
+    return 'propertyAddress' in policy;
+  }
+
+  // Helper methods for stats cards
+  getTotalCount(): number {
+    return this.policies.length;
+  }
+
+  getActiveCount(): number {
+    return this.policies.filter(p => p.status === 'ACTIVE').length;
+  }
+
+  getPendingCount(): number {
+    return this.policies.filter(p => p.status === 'PENDING').length;
+  }
+
+  getCarCount(): number {
+    return this.policies.filter(p => this.getPolicyType(p) === 'CAR').length;
+  }
+
+  getLifeCount(): number {
+    return this.policies.filter(p => this.getPolicyType(p) === 'LIFE').length;
+  }
+
+  getHouseCount(): number {
+    return this.policies.filter(p => this.getPolicyType(p) === 'HOUSE').length;
   }
 
   back(): void {

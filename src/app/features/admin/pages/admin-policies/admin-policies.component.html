@@ -95,38 +95,175 @@
   <!-- Summary Stats -->
   <div *ngIf="!isLoading && policies.length > 0" class="stats">
     <div class="stat-card">
-      <div class="stat-value">{{ policies.length }}</div>
+      <div class="stat-value">{{ getTotalCount() }}</div>
       <div class="stat-label">Total Policies</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">
-        {{ (policies.filter(p => p.status === 'ACTIVE').length) }}
-      </div>
+      <div class="stat-value">{{ getActiveCount() }}</div>
       <div class="stat-label">Active Policies</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">
-        {{ (policies.filter(p => p.status === 'PENDING').length) }}
-      </div>
+      <div class="stat-value">{{ getPendingCount() }}</div>
       <div class="stat-label">Pending Policies</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">
-        {{ (policies.filter(p => getPolicyType(p) === 'CAR').length) }}
-      </div>
+      <div class="stat-value">{{ getCarCount() }}</div>
       <div class="stat-label">Car Policies</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">
-        {{ (policies.filter(p => getPolicyType(p) === 'LIFE').length) }}
-      </div>
+      <div class="stat-value">{{ getLifeCount() }}</div>
       <div class="stat-label">Life Policies</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">
-        {{ (policies.filter(p => getPolicyType(p) === 'HOUSE').length) }}
-      </div>
+      <div class="stat-value">{{ getHouseCount() }}</div>
       <div class="stat-label">House Policies</div>
+    </div>
+  </div>
+</div>
+
+<!-- Policy Details Modal -->
+<div class="modal" *ngIf="showDetailsModal && selectedPolicy">
+  <div class="modal-overlay" (click)="closeDetailsModal()"></div>
+  <div class="modal-content modal-large">
+    <div class="modal-header">
+      <h2>Policy Details</h2>
+      <button class="close-btn" (click)="closeDetailsModal()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Common Policy Information -->
+      <div class="details-section">
+        <h3>General Information</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Policy Number:</label>
+            <span>{{ selectedPolicy.policyNumber }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Type:</label>
+            <span class="type-badge">{{ getPolicyType(selectedPolicy) }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Status:</label>
+            <span [class]="'status-badge ' + getStatusClass(selectedPolicy.status || 'PENDING')">
+              {{ selectedPolicy.status || 'PENDING' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <label>Coverage Amount:</label>
+            <span class="amount">${{ selectedPolicy.coverageAmount?.toLocaleString() || '0' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Premium Amount:</label>
+            <span class="amount">${{ selectedPolicy.premiumAmount?.toLocaleString() || 'TBD' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Start Date:</label>
+            <span>{{ selectedPolicy.startDate | date:'fullDate' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>End Date:</label>
+            <span>{{ selectedPolicy.endDate | date:'fullDate' }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Description:</label>
+            <span>{{ selectedPolicy.description || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Car Insurance Specific Details -->
+      <div class="details-section" *ngIf="isCarPolicy(selectedPolicy)">
+        <h3>Vehicle Information</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Vehicle Make:</label>
+            <span>{{ $any(selectedPolicy).vehicleMake }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Vehicle Model:</label>
+            <span>{{ $any(selectedPolicy).vehicleModel }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Vehicle Year:</label>
+            <span>{{ $any(selectedPolicy).vehicleYear }}</span>
+          </div>
+          <div class="detail-item">
+            <label>VIN:</label>
+            <span>{{ $any(selectedPolicy).vehicleIdentificationNumber }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Coverage Type:</label>
+            <span>{{ $any(selectedPolicy).coverageType }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Deductible:</label>
+            <span>${{ $any(selectedPolicy).deductible?.toLocaleString() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Life Insurance Specific Details -->
+      <div class="details-section" *ngIf="isLifePolicy(selectedPolicy)">
+        <h3>Life Insurance Information</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Policy Type:</label>
+            <span>{{ $any(selectedPolicy).policyType }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Beneficiary Name:</label>
+            <span>{{ $any(selectedPolicy).beneficiaryName }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Beneficiary Relationship:</label>
+            <span>{{ $any(selectedPolicy).beneficiaryRelationship }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Medical Exam Required:</label>
+            <span>{{ $any(selectedPolicy).medicalExamRequired ? 'Yes' : 'No' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- House Insurance Specific Details -->
+      <div class="details-section" *ngIf="isHousePolicy(selectedPolicy)">
+        <h3>Property Information</h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Property Address:</label>
+            <span>{{ $any(selectedPolicy).propertyAddress }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Property Type:</label>
+            <span>{{ $any(selectedPolicy).propertyType }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Year Built:</label>
+            <span>{{ $any(selectedPolicy).yearBuilt }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Square Footage:</label>
+            <span>{{ $any(selectedPolicy).squareFootage?.toLocaleString() }} sq ft</span>
+          </div>
+          <div class="detail-item">
+            <label>Construction Type:</label>
+            <span>{{ $any(selectedPolicy).constructionType }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Number of Stories:</label>
+            <span>{{ $any(selectedPolicy).numberOfStories }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Deductible:</label>
+            <span>${{ $any(selectedPolicy).deductible?.toLocaleString() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeDetailsModal()">Close</button>
     </div>
   </div>
 </div>

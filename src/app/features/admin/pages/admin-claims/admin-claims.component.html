@@ -69,7 +69,7 @@
               {{ claim.status.replace('_', ' ') }}
             </span>
           </td>
-          <td>{{ claim.claimDate | date:'short' }}</td>
+          <td>{{ claim.submittedDate | date:'short' }}</td>
           <td class="actions">
             <button 
               *ngIf="claim.status === 'SUBMITTED'" 
@@ -108,7 +108,7 @@
   <div class="modal-content">
     <h2>Approve Claim</h2>
     <p>Claim Number: <strong>{{ selectedClaim?.claimNumber }}</strong></p>
-    <p>Claimed Amount: <strong>${{ selectedClaim?.claimedAmount.toLocaleString() }}</strong></p>
+    <p>Claimed Amount: <strong>${{ selectedClaim?.claimedAmount?.toLocaleString() }}</strong></p>
 
     <div class="form-group">
       <label>Approved Amount*</label>

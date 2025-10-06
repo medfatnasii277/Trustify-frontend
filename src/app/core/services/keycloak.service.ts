@@ -28,28 +28,70 @@ export class KeycloakService {
           clientId: environment.keycloak.clientId
         });
 
-        this.keycloak.init({
-          onLoad: 'check-sso',
-          pkceMethod: 'S256',
-          checkLoginIframe: false
-        })
-        .then((authenticated: boolean) => {
-          this.authenticated.next(authenticated);
+        // Check if we have tokens in localStorage
+        const storedToken = localStorage.getItem('token');
+        const storedRefreshToken = localStorage.getItem('refreshToken');
 
-          if (authenticated) {
-            this.loadUserProfile();
-            this.updateUserRoles();
-            this.setupTokenRefresh();
-            this.storeTokens();
-            this.redirectBasedOnRole();
-          }
+        if (storedToken && storedRefreshToken) {
+          // Try to use stored tokens
+          this.keycloak.init({
+            onLoad: 'check-sso',
+            pkceMethod: 'S256',
+            checkLoginIframe: false,
+            token: storedToken,
+            refreshToken: storedRefreshToken
+          })
+          .then((authenticated: boolean) => {
+            console.log('Keycloak initialized with stored tokens, authenticated:', authenticated);
+            this.authenticated.next(authenticated);
 
-          resolve(authenticated);
-        })
-        .catch((error) => {
-          console.error('Failed to initialize Keycloak', error);
-          reject(error);
-        });
+            if (authenticated) {
+              this.loadUserProfile();
+              this.updateUserRoles();
+              this.setupTokenRefresh();
+              this.storeTokens();
+              // Don't redirect on token restoration - let router handle current URL
+            } else {
+              // Tokens were invalid, clear them
+              console.log('Stored tokens were invalid, clearing');
+              localStorage.removeItem('token');
+              localStorage.removeItem('refreshToken');
+            }
+
+            resolve(authenticated);
+          })
+          .catch((error) => {
+            console.error('Failed to initialize Keycloak with stored tokens', error);
+            // Clear invalid tokens
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            resolve(false); // Don't reject, just return false
+          });
+        } else {
+          // No stored tokens, just check SSO
+          this.keycloak.init({
+            onLoad: 'check-sso',
+            pkceMethod: 'S256',
+            checkLoginIframe: false
+          })
+          .then((authenticated: boolean) => {
+            this.authenticated.next(authenticated);
+
+            if (authenticated) {
+              this.loadUserProfile();
+              this.updateUserRoles();
+              this.setupTokenRefresh();
+              this.storeTokens();
+              this.redirectBasedOnRole();
+            }
+
+            resolve(authenticated);
+          })
+          .catch((error) => {
+            console.error('Failed to initialize Keycloak', error);
+            reject(error);
+          });
+        }
       } catch (error) {
         console.error('Exception initializing Keycloak', error);
         reject(error);

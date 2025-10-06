@@ -37,12 +37,29 @@ export class App implements OnInit {
         this.initialized = true;
 
         // Handle initial routing after Keycloak initialization
+        const currentUrl = this.router.url;
+        console.log('Current URL:', currentUrl);
+
         if (!authenticated) {
-          // User is not authenticated, redirect to login
-          this.router.navigate(['/auth/login']);
+          // User is not authenticated, redirect to login only if not already there
+          if (!currentUrl.startsWith('/auth/')) {
+            this.router.navigate(['/auth/login']);
+          }
         } else {
-          // User is authenticated, KeycloakService will handle role-based redirection
-          // The redirectBasedOnRole is called in loginWithCredentials
+          // User is authenticated
+          // Only redirect if on login/signup pages or root
+          if (currentUrl === '/' || currentUrl.startsWith('/auth/')) {
+            // Redirect based on role
+            this.keycloakService.getUserRoles().subscribe(roles => {
+              const hasAdminRole = roles.some(r => r.toLowerCase() === 'admin');
+              if (hasAdminRole) {
+                this.router.navigate(['/hello-admin']);
+              } else {
+                this.router.navigate(['/dashboard']);
+              }
+            });
+          }
+          // Otherwise, stay on current page (page refresh case)
         }
       })
       .catch(error => {
