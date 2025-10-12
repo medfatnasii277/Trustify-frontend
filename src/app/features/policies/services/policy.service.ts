@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class PolicyService {
   private http = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/policies`;
+  private baseUrl = `${environment.apiUrl}/api/policies`;
 
   // Life Insurance APIs
   createLifePolicy(policy: LifeInsurancePolicy): Observable<LifeInsurancePolicy> {

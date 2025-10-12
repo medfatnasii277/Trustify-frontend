@@ -10,7 +10,7 @@ import { ClaimApprovalRequest, ClaimRejectionRequest, ClaimStatistics } from '..
 })
 export class AdminClaimService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/admin/claims`;
+  private apiUrl = `${environment.apiUrl}/api/admin/claims`;
 
   /**
    * Get all claims in the system

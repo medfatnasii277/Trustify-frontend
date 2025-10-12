@@ -13,7 +13,7 @@ export type AnyInsurancePolicy = CarInsurancePolicy | LifeInsurancePolicy | Hous
 })
 export class AdminPolicyService {
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/api`;
 
   /**
    * Get all car insurance policies

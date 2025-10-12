@@ -45,7 +45,7 @@ export interface UserProfileResponse {
   providedIn: 'root'
 })
 export class UserProfileService {
-  private apiUrl = `${environment.apiUrl}/profiles`;
+  private apiUrl = `${environment.apiUrl}/api/profiles`;
 
   constructor(private http: HttpClient) {}
 

@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KeycloakService } from '../../../../core/services/keycloak.service';
 import { Router, RouterModule } from '@angular/router';
+import { NotificationBellComponent } from '../../../../shared/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule]
+  imports: [CommonModule, RouterModule, NotificationBellComponent]
 })
 export class DashboardComponent implements OnInit {
   username = '';
